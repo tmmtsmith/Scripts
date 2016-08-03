@@ -55,33 +55,34 @@
         $criticalerror = $true
       }
     }
-  }
-  if(!$criticalerror){
-    Write-Host ('Adding libraries for SQL version {0}' -f $version)
-    Add-Type -Path $selectedversion.Path
-    $sqlsrv = New-Object Microsoft.SqlServer.Management.SMO.Server($Server)
-    $now = [datetime]::Now.Tostring('yyyyMMdd_HHmm') # ISO standard form of date time
+  
+    if(!$criticalerror){
+      Write-Host ('Adding libraries for SQL version {0}' -f $version)
+      Add-Type -Path $selectedversion.Path
+      $sqlsrv = New-Object Microsoft.SqlServer.Management.SMO.Server($Server)
+      $now = [datetime]::Now.Tostring('yyyyMMdd_HHmm') # ISO standard form of date time
 
-    $outfile = $outfilepath + $name + '_' + $now + '.sql'
-    $newitem = $sqlsrv.Databases["$database"].$objects["$name"].Script()
-    $previousitempath = Get-ChildItem -Path $outfilepath | Where-Object {$_.Fullname -match ($name+'_\d{8}_\d{4}')} | Sort-Object {$_.LastWriteTime} -Descending |  Select-Object -first 1 -ExpandProperty FullName
-    if(!$previousitempath){
-      $create_a_new_item = $true
-    }
-    else{
-      $previousitem = Get-Content $previousitempath
-      $newitem | Out-File $env:TEMP+'\'+$name
-      $currentitem = Get-Content -Path ($env:TEMP+'\'+$name)
-      if((Compare-Object -ReferenceObject $previousitem -DifferenceObject $currentitem | Select-Object SideIndicator -ExpandProperty SideIndicator).count -gt 0){
+      $outfile = $outfilepath + $name + '_' + $now + '.sql'
+      $newitem = $sqlsrv.Databases["$database"].$objects["$name"].Script()
+      $previousitempath = Get-ChildItem -Path $outfilepath | Where-Object {$_.Fullname -match ($name+'_\d{8}_\d{4}')} | Sort-Object {$_.LastWriteTime} -Descending |  Select-Object -first 1 -ExpandProperty FullName
+      if(!$previousitempath){
         $create_a_new_item = $true
-        Remove-Item -Path $env:TEMP+'\'+$name -Force
-      }else{
-        Write-Host ('New and old object is the same - no need to write a new one')
+      }
+      else{
+        $previousitem = Get-Content $previousitempath
+        $newitem | Out-File $env:TEMP+'\'+$name
+        $currentitem = Get-Content -Path ($env:TEMP+'\'+$name)
+        if((Compare-Object -ReferenceObject $previousitem -DifferenceObject $currentitem | Select-Object SideIndicator -ExpandProperty SideIndicator).count -gt 0){
+          $create_a_new_item = $true
+          Remove-Item -Path $env:TEMP+'\'+$name -Force
+        }else{
+          Write-Host ('New and old object is the same - no need to write a new one')
+        }
+      }
+
+      if($create_a_new_item){
+        $newitem | Out-File $outfile
       }
     }
-
-    if($create_a_new_item){
-      $newitem | Out-File $outfile
-    }
   }
-} # END Return-MSSQLObject
+}# END Return-MSSQLObject

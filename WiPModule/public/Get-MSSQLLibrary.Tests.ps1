@@ -22,8 +22,8 @@ Describe 'Get-MSSQLLibrary' {
     It "function returned '2008R2' in returned oject property 'VersionNumber'" {
       $var.versionnumber | should be 2008R2
     }
-    It "function returned '2008R2' in returned oject property 'VersionNumber'" {
-      $var | should be 1
+    It 'function returned correct object' {
+      $var | should be {@{VersionCode=100; VersionNumber=2008R2; Path=C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll}}
     }
   }
   Context 'Library 100 exists and so does library 130'{

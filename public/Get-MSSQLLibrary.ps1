@@ -1,13 +1,13 @@
-﻿function Get-MSSQLLibrary{
+﻿Function Get-MSSQLLibrary{
   <#
       .SYNOPSIS
       collects information on all SQL librabies installed on the local computer 
       .DESCRIPTION
       if one or more SQL libraries is installed will return an object with the following info: VersionCode,VersionNumber,Path
-      supports currently the following versions os MS SQL 2008R2,2012,2014 and 2016
+      supports currently the following versions of MS SQL 2008R2,2012,2014 and 2016
       if no SQL libraries found nothing will be returned from the function
       .NOTES
-      Author: Mattias Blixt - mattiasblixt@gmail.com
+      Author: Mattias Blixt - mattiasblixt[at]gmail[dot]com
       .EXAMPLE
       Get-MSSQLLibrary
       will check after installed SQL libraries on the local computer and return an object with one or more rows if any found, if none found nothing is returned

@@ -1,3 +1,5 @@
+#Author: Mattias Blixt - mattiasblixt[at]gmail[dot]com
+
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 . "$here\$sut"
@@ -23,7 +25,9 @@ Describe 'Get-MSSQLLibrary' {
       $var.versionnumber | should be 2008R2
     }
     It 'function returned correct object' {
-      $var | should be {@{VersionCode=100; VersionNumber=2008R2; Path=C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll}}
+      $var.VersionCode | should be '100'
+      $var.VersionNumber | should be '2008R2'
+      $var.Path | should be 'C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll'
     }
   }
   Context 'Library 100 exists and so does library 130'{
@@ -37,7 +41,7 @@ Describe 'Get-MSSQLLibrary' {
       $var.count | Should Be 2
     }
     It "function returned '100' in first returned object property 'VersionCode'" {
-      $var[0].versioncode | should be 100
+      $var[0].VersionCode | should be 100
     }
     It "function returned '2008R2' in first returned object property 'VersionNumber'" {
       $var[0].VersionNumber | should be 2008R2

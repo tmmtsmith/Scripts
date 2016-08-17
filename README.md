@@ -1,5 +1,5 @@
-# Scripts
-T-SQL and PowerShell Scripts
+# WiPModule
+Compare T-SQL Objects With PowerShell
 
 
 **Contributors**
